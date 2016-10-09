@@ -1,3 +1,38 @@
+//1.前面补0
+function p(n){
+    return n<10?'0'+n:n;
+}
+
+//定时器白
+var whiteOne=1;
+//定时器黑
+var blackOne=1;
+//2.倒计时
+function getMyTime1(){
+    var m=parseInt(whiteOne/60%60);
+    var s=parseInt(whiteOne%60);
+    document.getElementById('whiteTime').innerHTML=p(m)+':'+p(s);
+    whiteOne=whiteOne+1;
+    if(whiteOne>=600){
+        document.getElementById('time').innerHTML='游戏结束';
+    }
+}
+//t1=setInterval('getMyTime1()',1000);
+
+
+//2.倒计时
+function getMyTime2(){
+    var m=parseInt(blackOne/60%60);
+    var s=parseInt(blackOne%60);
+    document.getElementById('blackTime').innerHTML=p(m)+':'+p(s);
+    blackOne=blackOne+1;
+    if(blackOne>=600){
+        document.getElementById('blackTime').innerHTML='游戏结束';
+    }
+}
+
+
+
 $(function(){
     // var canvas=document.getElementById('canvas');
     var canvas=$('#canvas').get(0);
@@ -12,14 +47,16 @@ $(function(){
     var ai=false;
     var blank={};
     var biao=$('#biao').get(0);
-    var biao=biao.getContext('2d');
+    // var biao=biao.getContext('2d');
     var biao2=$('#biao2').get(0);
-    var biao2=biao2.getContext('2d');
+    // var biao2=biao2.getContext('2d');
     for(var i=0;i<ROW;i++){
         for(var j=0;j<ROW;j++){
             blank[p2k(i,j)]=true;
         }
     }
+    var t1=1;
+    var t2=1;
     // $('.canvas').fadeIn();
     console.log(blank);
     //画小圆
@@ -71,13 +108,21 @@ $(function(){
             radgrad.addColorStop(0, 'white');
             radgrad.addColorStop(0.5, 'black');
             ctx.fillStyle=radgrad;
+            t1=setInterval('getMyTime1()',1000);
+            clearInterval(t2);
+            blackOne=1;
+            document.getElementById('blackTime').innerHTML="00:00";
         }else if(color=='white'){
             // ctx.fillStyle="gray";
             ctx.shadowColor="black";
             ctx.shadowBlur=5;
             ctx.offsetX=1;
             ctx.offsetY=1;
-            ctx.fillStyle='white'
+            ctx.fillStyle='white';
+            t2=setInterval('getMyTime2()',1000);
+            clearInterval(t1);
+            whiteOne=1;
+            document.getElementById('whiteTime').innerHTML="00:00";
         }
         ctx.save();
         ctx.translate((position.x+0.5)*off+0.5,(position.y+0.5)*off+0.5);
@@ -221,6 +266,12 @@ $(function(){
           if(check(position,'black')>=5){
               alert('黑棋赢');
               $(canvas).off('click');
+              whiteOne=1;
+              blackOne=1;
+              clearInterval(t1);
+              clearInterval(t2);
+              document.getElementById('whiteTime').innerHTML="00:00";
+              document.getElementById('blackTime').innerHTML="00:00";
               if(confirm('是否生成棋谱')){
                   review();
               }
@@ -230,8 +281,15 @@ $(function(){
          // setTimeout(drawChess(AI(),'white'),5000) ;
           // setTimeout(miao,5000)
           if(check(AI(),'white')>5){
+
               alert('白棋赢');
               $(canvas).off('click');
+              whiteOne=1;
+              blackOne=1;
+              clearInterval(t1);
+              clearInterval(t2);
+              document.getElementById('whiteTime').innerHTML="00:00";
+              document.getElementById('blackTime').innerHTML="00:00";
               if(confirm('是否生成棋谱')){
                   review();
               }
@@ -250,6 +308,12 @@ $(function(){
 
        alert('黑棋赢');
        $('canvas').off('click');
+              whiteOne=1;
+              blackOne=1;
+              clearInterval(t1);
+              clearInterval(t2);
+              document.getElementById('whiteTime').innerHTML="00:00";
+              document.getElementById('blackTime').innerHTML="00:00";
        if(confirm('是否生成棋谱')){
        review();
        }
@@ -265,6 +329,12 @@ $(function(){
        //         top:"400px"
        //     })
        $('canvas').off('click');
+           whiteOne=1;
+           blackOne=1;
+           clearInterval(t1);
+           clearInterval(t2);
+           document.getElementById('whiteTime').innerHTML="00:00";
+           document.getElementById('blackTime').innerHTML="00:00";
        if(confirm('是否生成棋谱')){
        review();
        }
@@ -280,6 +350,12 @@ $(function(){
         flag=true;
         $('canvas').off('click').on('click',handleClick);
         draw();
+        whiteOne=1;
+        blackOne=1;
+        clearInterval(t1);
+        clearInterval(t2);
+        document.getElementById('whiteTime').innerHTML="00:00";
+        document.getElementById('blackTime').innerHTML="00:00";
 
     }
     $('.start').on('click',function(){
@@ -290,8 +366,8 @@ $(function(){
         startClick();
         // t=setInterval(miao,1000);
         audioc.play();
-        miao();
-        miao2();
+        /*miao();
+        miao2();*/
     })
     $('.res').on('click',function(){
         // $('.start').fadeToggle();
@@ -337,12 +413,12 @@ $(function(){
         }
     }
 
-    function miao(shu){
+   /* function miao(shu){
         biao.clearRect(0,0,80,82);
         biao.save();
         biao.translate(40,41)
-      /*  var date=new Date();
-        var s=date.getSeconds();*/
+      /!*  var date=new Date();
+        var s=date.getSeconds();*!/
 
         biao.rotate(2*Math.PI*shu/60);
         biao.beginPath();
@@ -358,8 +434,8 @@ $(function(){
         biao.clearRect(0,0,80,82);
         biao2.save();
         biao2.translate(40,41)
-       /* var date=new Date();
-        var s=date.getSeconds();*/
+       /!* var date=new Date();
+        var s=date.getSeconds();*!/
         biao2.rotate(2*Math.PI/60);
         biao2.beginPath();
         biao2.moveTo(0,0);
@@ -368,8 +444,10 @@ $(function(){
         biao2.closePath();
         biao2.restore();
     }
-    miao2();
+    miao2();*/
 $('.hui').on('click',function(){
     $('.huibox').slideToggle();
 })
+
+
 })
