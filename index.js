@@ -377,6 +377,7 @@ $(function(){
     })
     $('.ai').on('click',function(){
         ai=!ai;
+        restart();
         startClick();
         $('.renjik').fadeIn().delay(1000).fadeOut();
 
